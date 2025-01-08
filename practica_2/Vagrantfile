@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
   # Configuración del proveedor VirtualBox
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
-    vb.customize [ "modifyvm", :id, "--uartmode1", "disconected" ]
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
   end
 
   # Instalar Chef antes de ejecutar chef_solo
