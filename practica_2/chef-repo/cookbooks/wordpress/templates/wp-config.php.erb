@@ -1,0 +1,29 @@
+<?php
+// ** Configuración de la base de datos de WordPress ** //
+define('DB_NAME', 'wordpress'); // El nombre de la base de datos de WordPress
+define('DB_USER', 'wp_user');    // El nombre de usuario de la base de datos
+define('DB_PASSWORD', 'wp_password');  // La contraseña del usuario de la base de datos
+define('DB_HOST', 'localhost'); // o la dirección IP de tu servidor MySQL, si no es local
+
+// ** URL del sitio de WordPress ** //
+define('WP_HOME', 'http://localhost:8081');
+define('WP_SITEURL', 'http://localhost:8081');
+
+// ** Configuración de claves únicas para WordPress ** //
+define('AUTH_KEY',         '8K&F2T!CxoN@Aq4LsRZn8U?F5v3Bh8k#0s!A@4t-FuF8XJGmVX_4-Qr!1c9zdR'); 
+define('SECURE_AUTH_KEY',  'XwZ9F@3dQ8cJ&$hR!@kcZtW@t%wKHrqpKc7z5t8CkshQMn!3n!b_@Y3qVXb%;p'); 
+define('LOGGED_IN_KEY',    'N3Jk#bvdXE5%3!nkF5M6cX@Ff5*Z5wjs!^Nz8uW+@rtVu!bG.#@GzJsqkZD+<D');
+define('NONCE_KEY',        'rWb-FD8^Z?gD55RZmWG8lNJrk2K4X8rArLfU6gu3%&8v*F5_m1q5w&4mLCkw^f8');
+
+// ** Configuración de la base de datos ** //
+$table_prefix = 'wp_'; // Puedes cambiar el prefijo si lo deseas, pero asegúrate de que sea único
+
+// Otros ajustes de configuración de WordPress
+define('WP_DEBUG', false); // Habilitar el modo de depuración (true o false)
+
+// ** Configuración de la ruta absoluta de WordPress ** //
+if ( !defined('ABSPATH') )
+    define('ABSPATH', dirname(__FILE__) . '/');
+
+// ** Configuración de los archivos de WordPress y la carga de WordPress ** //
+require_once(ABSPATH . 'wp-settings.php');

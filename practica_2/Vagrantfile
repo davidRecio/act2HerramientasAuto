@@ -1,0 +1,33 @@
+Vagrant.configure("2") do |config|
+  # La caja que usarás
+  config.vm.box = "ubuntu/bionic64"
+
+  # Crear una red privada para acceso solo entre el host y la VM
+  config.vm.network "private_network", ip: "192.168.33.40"
+  config.vm.network "forwarded_port", guest: 80, host: 8081
+  # Configuración del proveedor VirtualBox
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  # Instalar Chef antes de ejecutar chef_solo
+  config.vm.provision "shell", inline: <<-SHELL
+    # Actualizar y preparar la máquina para la instalación de Chef
+    sudo apt-get update
+    sudo apt-get install -y curl
+
+    # Instalar Chef
+    curl -L https://chef.io/chef/install.sh | sudo bash
+  SHELL
+
+  # Provisionar con Chef Solo después de que Chef esté instalado
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "chef-repo/cookbooks"  # Asegúrate de que esta ruta sea correcta
+    chef.add_recipe "apache"
+    chef.add_recipe "mysql"
+    chef.add_recipe "php"
+    chef.add_recipe "wordpress"
+    chef.arguments = "--chef-license accept"
+    chef.install = false
+  end
+end
