@@ -1,0 +1,9 @@
+Ejecución de cada una desde su directorio:
+
+chef exec rspec spec/mysql_spec.rb
+chef exec rspec spec/php_spec.rb
+chef exec rspec spec/wordpress_spec.rb
+
+Ejecución conjunta:
+
+chef exec rspec 
