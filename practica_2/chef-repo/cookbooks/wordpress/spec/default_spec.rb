@@ -52,17 +52,11 @@ describe 'wordpress::default' do
     )
   end
 
-  it 'crea el directorio /var/www/html/wordpress' do
-    expect(chef_run).to create_directory('/var/www/html/wordpress').with(
-      owner: 'www-data',
-      group: 'www-data',
-      mode: '0755'
-    )
-  end
+
 
   # Archivo wp-config.php
-  it 'crea el archivo wp-config.php dentro de wordpress' do
-    expect(chef_run).to create_template('/var/www/html/wordpress/wp-config.php').with(
+  it 'crea el archivo wp-config.php' do
+    expect(chef_run).to create_template('/var/www/html/wp-config.php').with(
       owner: 'www-data',
       group: 'www-data',
       mode: '0644'

@@ -19,13 +19,6 @@ directory '/var/www/html' do
   action :create
 end
 
-directory '/var/www/html/wordpress' do
-  owner 'www-data'
-  group 'www-data'
-  mode '0755'
-  action :create
-end
-
 # Descargar y extraer WordPress
 remote_file '/tmp/wordpress.tar.gz' do
   source 'https://wordpress.org/latest.tar.gz'
@@ -37,13 +30,13 @@ bash 'extract_wordpress' do
   code <<-EOH
     tar -xzf /tmp/wordpress.tar.gz -C /var/www/html --strip-components=1
   EOH
-  creates '/var/www/html/wordpress/wp-config.php'  # Verifica que el archivo wp-config.php dentro de wordpress esté presente
-  not_if { ::File.exist?('/var/www/html/wp-config.php') }  # Cambiado para que la verificación no dependa de un archivo fuera de wordpress
+  creates '/var/www/html/wp-config.php'  # Verifica que wp-config.php esté presente
+  not_if { ::File.exist?('/var/www/html/wp-config.php') }  # Solo extrae si wp-config.php no existe
   action :run
 end
 
 # Asegurar que los permisos sean correctos
-template '/var/www/html/wordpress/wp-config.php' do  # Cambiado para crear el archivo en /wordpress
+template '/var/www/html/wp-config.php' do  # Archivo wp-config.php en el directorio principal de WordPress
   source 'wp-config.php.erb'
   owner 'www-data'
   group 'www-data'
@@ -106,6 +99,6 @@ bash 'initialize-wordpress' do
     /usr/local/bin/wp core install --url="http://localhost" --title="Mi Blog" --admin_user="admin" --admin_password="password" --admin_email="admin@example.com" --path=/var/www/html --allow-root
   EOH
   cwd '/var/www/html'
-  not_if '/usr/local/bin/wp core is-installed --path=/var/www/html'
+  not_if '/usr/local/bin/wp core is-installed --path=/var/www/html'  # Solo ejecuta si WordPress no está instalado
   action :run
 end
