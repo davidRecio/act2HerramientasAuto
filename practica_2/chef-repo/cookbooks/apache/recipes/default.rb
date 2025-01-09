@@ -1,21 +1,42 @@
 # Actualiza los repositorios antes de instalar cualquier paquete
-apt_update 'Update the apt cache daily' do
-  frequency 86400
-  action :update
+case node['platform']
+when 'ubuntu', 'debian'
+  apt_update 'Update the apt cache daily' do
+    frequency 86400
+    action :update
+  end
+
+  # Forzar la instalación de dependencias faltantes antes de continuar
+  execute 'force-install-dependencies' do
+    command 'apt-get install -f'
+    user 'root'
+    action :run
+  end
+
+when 'centos', 'redhat', 'fedora'
+  # Actualiza los repositorios en CentOS/RHEL antes de instalar paquetes
+  execute 'update-yum-repositories' do
+    command 'yum check-update'
+    user 'root'
+    action :run
+  end
+
+  # Forzar la instalación de dependencias faltantes en CentOS/RHEL
+  execute 'force-install-dependencies' do
+    command 'yum install -y some-package'  # Cambia esto según tus necesidades
+    user 'root'
+    action :run
+  end
+
+else
+  raise "No supported package manager for platform: #{node['platform']}"
 end
 
-# Forzar la instalación de dependencias faltantes antes de continuar
-execute 'force-install-dependencies' do
-  command 'apt-get install -f'
-  user 'root'
-  action :run
-end
 
 # Instala Apache sin los paquetes recomendados como ssl-cert
 package 'apache2' do
   options '--no-install-recommends'
   action :install
-  notifies :run, 'execute[force-install-dependencies]', :immediately
 end
 
 # Asegúrate de que Apache esté habilitado y en ejecución
@@ -58,6 +79,3 @@ execute 'install-wordpress' do
   not_if { ::File.exist?('/var/www/html/wordpress') }
   notifies :reload, 'service[apache2]', :immediately
 end
-
-# Incluye la receta de facts si es necesaria
-include_recipe '::facts'

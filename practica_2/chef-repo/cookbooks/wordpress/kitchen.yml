@@ -1,8 +1,5 @@
 driver:
   name: vagrant
-  network:
-    - ["forwarded_port", {guest: 80, host: 8081}] # Para Ubuntu
-    - ["forwarded_port", {guest: 80, host: 8082}] # Para CentOS
 
 provisioner:
   name: chef_zero
@@ -12,17 +9,33 @@ verifier:
   test_framework: rspec
 
 platforms:
-  - name: ubuntu-20.04
+  - name: ubuntu-22.04
     driver:
       network:
-        - ["forwarded_port", {guest: 80, host: 8081}] # Puerto para Ubuntu
-  - name: centos-8
+        - ["forwarded_port", {guest: 80, host: 8081}]
+    verifier:
+      attributes:
+        service: apache2
+        phpmysql: 'php-mysql'
+
+  - name: centos-7.8
     driver:
       network:
-        - ["forwarded_port", {guest: 80, host: 8082}] # Puerto para CentOS
+        - ["forwarded_port", {guest: 80, host: 8082}]
+    verifier:
+      attributes:
+        service: httpd
+        phpmysql: 'php-mysqlnd'
 
 suites:
   - name: default
+    run_list:
+      - recipe[apache::default]
+      - recipe[mysql::default]
+      - recipe[php::default]
+      - recipe[wordpress::default]
     verifier:
-      patterns:
-        - test/integration/default/*_spec.rb
+      inspec_tests:
+        - test/integration/default
+    data_path: "."
+    cookbook_locks: []
