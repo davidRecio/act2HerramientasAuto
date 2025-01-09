@@ -1,0 +1,5 @@
+source 'https://supermarket.chef.io'
+
+# Lista de cookbooks requeridos
+cookbook 'apache2', '~> 8.0'
+cookbook 'mysql', '~> 10.0'

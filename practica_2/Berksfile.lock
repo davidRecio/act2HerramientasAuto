@@ -1,0 +1,13 @@
+DEPENDENCIES
+  apache2 (~> 8.0)
+  mysql (~> 10.0)
+
+GRAPH
+  apache2 (8.15.10)
+    yum-epel (>= 0.0.0)
+  apparmor (4.1.12)
+    line (>= 0.0.0)
+  line (4.5.21)
+  mysql (10.1.4)
+    apparmor (>= 0.0.0)
+  yum-epel (5.0.8)

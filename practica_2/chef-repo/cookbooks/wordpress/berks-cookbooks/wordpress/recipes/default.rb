@@ -17,13 +17,7 @@ directory '/var/www/html' do
   group 'www-data'
   mode '0755'
   action :create
-end
-
-directory '/var/www/html/wordpress' do
-  owner 'www-data'
-  group 'www-data'
-  mode '0755'
-  action :create
+  recursive true
 end
 
 # Descargar y extraer WordPress
@@ -33,17 +27,17 @@ remote_file '/tmp/wordpress.tar.gz' do
   not_if { ::File.exist?('/tmp/wordpress.tar.gz') }
 end
 
-bash 'extract_wordpress' do
+bash 'extract-wordpress' do
   code <<-EOH
     tar -xzf /tmp/wordpress.tar.gz -C /var/www/html --strip-components=1
   EOH
-  creates '/var/www/html/wordpress/wp-config.php'  # Verifica que el archivo wp-config.php dentro de wordpress esté presente
-  not_if { ::File.exist?('/var/www/html/wp-config.php') }  # Cambiado para que la verificación no dependa de un archivo fuera de wordpress
+  creates '/var/www/html/wp-config-sample.php'
+  not_if { ::File.exist?('/var/www/html/wp-config-sample.php') }
   action :run
 end
 
 # Asegurar que los permisos sean correctos
-template '/var/www/html/wordpress/wp-config.php' do  # Cambiado para crear el archivo en /wordpress
+template '/var/www/html/wp-config.php' do
   source 'wp-config.php.erb'
   owner 'www-data'
   group 'www-data'
@@ -89,7 +83,7 @@ end
 
 # Asegurar que Apache esté habilitado y en ejecución
 service 'apache2' do
-  action [:enable, :start, :restart]
+  action [:enable, :start]
   supports status: true, restart: true
 end
 

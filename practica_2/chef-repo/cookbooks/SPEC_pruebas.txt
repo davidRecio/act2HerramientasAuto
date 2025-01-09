@@ -7,3 +7,5 @@ chef exec rspec spec/wordpress_spec.rb
 Ejecución conjunta:
 
 chef exec rspec 
+
+chef exec rspec 'chef-repo/cookbooks/*/spec/*_spec.rb'

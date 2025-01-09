@@ -17,7 +17,6 @@ package 'mysql-server' do
       mysql -uroot -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'localhost';"
       mysql -uroot -e "FLUSH PRIVILEGES;"
     EOH
-    not_if "mysql -uroot -e 'SHOW DATABASES;' | grep wordpress"
     action :run
   end
   
