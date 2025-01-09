@@ -18,7 +18,7 @@ platforms:
         service: apache2
         phpmysql: 'php-mysql'
 
-  - name: centos-7.8
+  - name: centos/stream10
     driver:
       network:
         - ["forwarded_port", {guest: 80, host: 8082}]

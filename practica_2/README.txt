@@ -17,4 +17,7 @@ Ejecución de test
         chef exec rspec 'chef-repo/cookbooks/*/spec/*_spec.rb'
 
     Integración:
+    en el directorio de wordpress
+    practica_2\chef-repo\cookbooks\wordpress>
+        kitchen converge     
         
